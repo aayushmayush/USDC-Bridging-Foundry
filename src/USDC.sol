@@ -14,10 +14,7 @@ contract USDCToken is ERC20, AccessControl {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-    function mint(
-        address _account,
-        uint256 _value
-    ) external onlyRole(MINT_ROLE) {
+    function mint(address _account, uint256 _value) external onlyRole(MINT_ROLE) {
         if (_value == 0) {
             revert AmountShouldBeGreaterThanZero();
         }
@@ -39,7 +36,7 @@ contract USDCToken is ERC20, AccessControl {
         _burn(_account, _value);
     }
 
-    function decimals() public pure  override returns (uint8) {
+    function decimals() public pure override returns (uint8) {
         return 6;
     }
 
