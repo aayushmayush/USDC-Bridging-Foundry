@@ -5,13 +5,14 @@ import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
 error AlreadyProcessed();
 error SourceBridgeNotAuthorizedForTransaction(address srcBridgeAddress);
-error RelayerNotAuthorized(address relayer);
+
+
 contract BridgeDestination is AccessControl {
     USDCToken immutable usdc_token;
     mapping(bytes32 => bool) public processed;
-    mapping(address => bool) public relayers;
+
     bytes32 public constant RELAYER_ROLE = keccak256("RELAYER_ROLE");
-    mapping(uint256 => address) public  sourceBridgeForChain;
+    mapping(uint256 => address) public sourceBridgeForChain;
 
     event BridgeExecuted(
         bytes32 messageId,
@@ -25,6 +26,7 @@ contract BridgeDestination is AccessControl {
         address executedBy,
         uint256 timestamp
     );
+
     event SourceBridgeSet(uint256 chainId, address bridgeAddress);
 
     constructor(USDCToken _usdc) {
@@ -42,7 +44,7 @@ contract BridgeDestination is AccessControl {
         uint256 amount
     ) public onlyRole(RELAYER_ROLE) {
         bytes32 messageId = keccak256(
-            abi.encodePacked(srcChainId, srcBridgeAddress,token, nonce)
+            abi.encodePacked(srcChainId, srcBridgeAddress, token, nonce)
         );
 
         if (processed[messageId] == true) {
@@ -51,9 +53,7 @@ contract BridgeDestination is AccessControl {
         if (sourceBridgeForChain[srcChainId] != srcBridgeAddress) {
             revert SourceBridgeNotAuthorizedForTransaction(srcBridgeAddress);
         }
-        if(relayers[msg.sender]==false){
-            revert RelayerNotAuthorized(msg.sender);
-        }
+
 
         processed[messageId] = true;
 
@@ -82,5 +82,9 @@ contract BridgeDestination is AccessControl {
 
     function grantRelayerRole(address _account) external {
         grantRole(RELAYER_ROLE, _account);
+    }
+
+    function getUSDCTokenAddress() public view returns (USDCToken) {
+        return usdc_token;
     }
 }

@@ -39,7 +39,7 @@ contract TestUSDC is Test {
 
             uint8 op = uint8(rand % 5); //0..4
 
-            uint amt = (rand % 1_000_000) + 1;
+            uint256 amt = (rand % 1_000_000) + 1;
 
             address actor = actors[rand % actors.length];
 
@@ -49,8 +49,9 @@ contract TestUSDC is Test {
             if (op == 0) {
                 // mint: only relayer (if has role) should succeed
                 try token.mint(actor, amt) {
-                    // minted
-                } catch {
+                // minted
+                }
+                    catch {
                     // ignore revert, state unchanged
                 }
             } else if (op == 1) {
@@ -89,11 +90,7 @@ contract TestUSDC is Test {
 
             uint256 total = token.totalSupply();
             // assert equality every iteration — if it ever fails, Foundry will report the seed & step
-            assertEq(
-                total,
-                sum,
-                "invariant broken: totalSupply != sum(balances)"
-            );
+            assertEq(total, sum, "invariant broken: totalSupply != sum(balances)");
         }
     }
 }

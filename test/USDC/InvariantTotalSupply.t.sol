@@ -31,15 +31,11 @@ contract InvariantTotalSupply is Test {
 
     function invariant_totalSupply_equals_sumOfBalances() public {
         uint256 sum = 0;
-        address[] memory actors = handler.getActors();
+        actors = handler.getActors();
 
         for (uint256 i = 0; i < actors.length; i++) {
             sum += token.balanceOf(actors[i]);
         }
-        assertEq(
-            sum,
-            token.totalSupply(),
-            "Invariant broken: totalSupply != sum of balances"
-        );
+        assertEq(sum, token.totalSupply(), "Invariant broken: totalSupply != sum of balances");
     }
 }

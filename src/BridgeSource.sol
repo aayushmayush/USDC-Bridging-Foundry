@@ -21,18 +21,14 @@ contract BridgeSource is Ownable {
         uint256 dstChainId,
         uint256 nonce,
         uint256 timestamp
-    );
+    ); //this is basically a request to mint equivalent amount of token to destination chain that relayer will listen and execute 
     event SupportedChainUpdated(uint256 chainId, bool enabled);
 
-    constructor(USDCToken _usdc) Ownable(msg.sender){
+    constructor(USDCToken _usdc) Ownable(msg.sender) {
         usdc_token = _usdc;
     }
 
-    function bridgeOut(
-        uint256 _amount,
-        address _to,
-        uint256 _dstChainId
-    ) public {
+    function bridgeOut(uint256 _amount, address _to, uint256 _dstChainId) public {
         if (_amount == 0) {
             revert AmountShouldBeGreaterThanZero();
         }
@@ -46,21 +42,14 @@ contract BridgeSource is Ownable {
         usdc_token.burnFrom(msg.sender, _amount);
 
         emit BridgeRequest(
-            msg.sender,
-            _to,
-            address(usdc_token),
-            _amount,
-            block.chainid,
-            _dstChainId,
-            nonce,
-            block.timestamp
+            msg.sender, _to, address(usdc_token), _amount, block.chainid, _dstChainId, nonce, block.timestamp
         );
         nonce++;
     }
 
-    function setSupportedChain(uint256 _chainId, bool _value) public onlyOwner{
+    function setSupportedChain(uint256 _chainId, bool _value) public onlyOwner {
         supportedDstChains[_chainId] = _value;
-        emit SupportedChainUpdated(_chainId,_value);
+        emit SupportedChainUpdated(_chainId, _value);
     }
 
     function nextNonce() external view returns (uint256) {

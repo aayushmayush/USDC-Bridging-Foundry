@@ -29,11 +29,7 @@ contract USDCHandler is Test {
         try token.mint(to, amount) {} catch {}
     }
 
-    function transfer(
-        uint256 fromIndex,
-        uint256 toIndex,
-        uint256 amount
-    ) external {
+    function transfer(uint256 fromIndex, uint256 toIndex, uint256 amount) external {
         fromIndex = fromIndex % actors.length;
         toIndex = toIndex % actors.length;
         address from = actors[fromIndex];

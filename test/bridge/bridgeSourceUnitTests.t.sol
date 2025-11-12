@@ -57,7 +57,7 @@ contract TestUSDC is Test {
         vm.stopPrank();
 
         assertEq(token.balanceOf(aayush), 1900e6);
-        assertEq(bridge.nextNonce(),1);
+        assertEq(bridge.nextNonce(), 1);
     }
 
     function testBridgeOutRevertOnAmountZero() public {
@@ -91,6 +91,7 @@ contract TestUSDC is Test {
 
         vm.stopPrank();
     }
+
     function testBridgeOutRevertOnUnsupportedDestinationId() public {
         _setSupportedChain(1234);
         uint256 minted = 2_000_000_000; // 2000 USDC
