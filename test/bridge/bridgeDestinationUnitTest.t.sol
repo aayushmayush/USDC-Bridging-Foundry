@@ -130,4 +130,24 @@ contract TestUSDC is Test {
 
         assertEq(token.balanceOf(alice),100_000_000,"Balance didnt matched");
     }
+
+        function testExecuteMintFailOnCalledByNonRelayer() public {
+        vm.startPrank(deployer);
+        token.grantMintRole(address(bridge));
+        bridge.grantRelayerRole(relayer);
+        bridge.setSourceBridge(sourceChainId, sourcebridgeAddress);
+        vm.stopPrank();
+
+        vm.prank(aayush); //aayush is not a relayer
+        vm.expectRevert();
+        bridge.executeMint(
+            sourceChainId,
+            sourcebridgeAddress,
+            nonce,
+            srcToken,
+            aayush,
+            alice,
+            100_000_000
+        );
+    }
 }

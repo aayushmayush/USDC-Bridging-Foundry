@@ -3,7 +3,7 @@ pragma solidity ^0.8.30;
 
 import {Test} from "forge-std/Test.sol";
 
-import {USDCToken} from "../../../src/USDC.sol";
+import {USDCToken} from "../../src/USDC.sol";
 import {USDCHandler} from "./handlers/USDCHandler.sol";
 
 contract InvariantTotalSupply is Test {

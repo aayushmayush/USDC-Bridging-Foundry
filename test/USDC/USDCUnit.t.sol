@@ -4,7 +4,7 @@ pragma solidity ^0.8.30;
 import "forge-std/Test.sol";
 import {USDCToken} from "../../../src/USDC.sol";
 import {IUSDC} from "../../../src/interfaces/IUSDC.sol";
-import {DeployUSDC} from "../../../script/USDC/DeployUSDC.s.sol";
+import {DeployUSDC} from "../../script/USDC/DeployUSDC.s.sol";
 
 contract TestUSDC is Test {
     USDCToken token;
