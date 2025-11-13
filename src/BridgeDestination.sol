@@ -6,7 +6,6 @@ import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 error AlreadyProcessed();
 error SourceBridgeNotAuthorizedForTransaction(address srcBridgeAddress);
 
-
 contract BridgeDestination is AccessControl {
     USDCToken immutable usdc_token;
     mapping(bytes32 => bool) public processed;
@@ -43,9 +42,7 @@ contract BridgeDestination is AccessControl {
         address to,
         uint256 amount
     ) public onlyRole(RELAYER_ROLE) {
-        bytes32 messageId = keccak256(
-            abi.encodePacked(srcChainId, srcBridgeAddress, token, nonce)
-        );
+        bytes32 messageId = keccak256(abi.encodePacked(srcChainId, srcBridgeAddress, token, nonce));
 
         if (processed[messageId] == true) {
             revert AlreadyProcessed();
@@ -54,29 +51,16 @@ contract BridgeDestination is AccessControl {
             revert SourceBridgeNotAuthorizedForTransaction(srcBridgeAddress);
         }
 
-
         processed[messageId] = true;
 
         usdc_token.mint(to, amount);
 
         emit BridgeExecuted(
-            messageId,
-            srcChainId,
-            srcBridgeAddress,
-            nonce,
-            from,
-            to,
-            token,
-            amount,
-            msg.sender,
-            block.timestamp
+            messageId, srcChainId, srcBridgeAddress, nonce, from, to, token, amount, msg.sender, block.timestamp
         );
     }
 
-    function setSourceBridge(
-        uint256 _chainId,
-        address _sourceBridgeAddress
-    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setSourceBridge(uint256 _chainId, address _sourceBridgeAddress) external onlyRole(DEFAULT_ADMIN_ROLE) {
         sourceBridgeForChain[_chainId] = _sourceBridgeAddress;
     }
 

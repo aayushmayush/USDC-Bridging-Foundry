@@ -21,7 +21,7 @@ contract BridgeSource is Ownable {
         uint256 dstChainId,
         uint256 nonce,
         uint256 timestamp
-    ); //this is basically a request to mint equivalent amount of token to destination chain that relayer will listen and execute 
+    ); //this is basically a request to mint equivalent amount of token to destination chain that relayer will listen and execute
     event SupportedChainUpdated(uint256 chainId, bool enabled);
 
     constructor(USDCToken _usdc) Ownable(msg.sender) {

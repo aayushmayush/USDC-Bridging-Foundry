@@ -7,7 +7,7 @@ import {IUSDC} from "../../src/interfaces/IUSDC.sol";
 import {DeployUSDC} from "../../script/USDC/DeployUSDC.s.sol";
 import {BridgeDestination} from "../../src/BridgeDestination.sol";
 
-contract TestUSDC is Test {
+contract TestDestinationBridge is Test {
     USDCToken token;
     address deployer;
     address minter; // arbitrary relayer address
@@ -32,11 +32,7 @@ contract TestUSDC is Test {
     }
 
     function testTokenRegisteredInConstructor() public {
-        assertEq(
-            address(bridge.getUSDCTokenAddress()),
-            address(token),
-            "token didnt matched"
-        );
+        assertEq(address(bridge.getUSDCTokenAddress()), address(token), "token didnt matched");
     }
 
     function testExecuteMintSuccess() public {
@@ -47,15 +43,7 @@ contract TestUSDC is Test {
         vm.stopPrank();
 
         vm.prank(relayer);
-        bridge.executeMint(
-            sourceChainId,
-            sourcebridgeAddress,
-            nonce,
-            srcToken,
-            aayush,
-            alice,
-            100_000_000
-        );
+        bridge.executeMint(sourceChainId, sourcebridgeAddress, nonce, srcToken, aayush, alice, 100_000_000);
     }
 
     function testExecuteMintRevertIfAlreadyProcessed() public {
@@ -66,27 +54,11 @@ contract TestUSDC is Test {
         vm.stopPrank();
 
         vm.prank(relayer);
-        bridge.executeMint(
-            sourceChainId,
-            sourcebridgeAddress,
-            nonce,
-            srcToken,
-            aayush,
-            alice,
-            100_000_000
-        );
+        bridge.executeMint(sourceChainId, sourcebridgeAddress, nonce, srcToken, aayush, alice, 100_000_000);
 
         vm.prank(relayer);
         vm.expectRevert();
-        bridge.executeMint(
-            sourceChainId,
-            sourcebridgeAddress,
-            nonce,
-            srcToken,
-            aayush,
-            alice,
-            100_000_000
-        );
+        bridge.executeMint(sourceChainId, sourcebridgeAddress, nonce, srcToken, aayush, alice, 100_000_000);
     }
 
     function testExecuteMintRevertIfSourceBridgeChainNotAuthorized() public {
@@ -98,15 +70,7 @@ contract TestUSDC is Test {
 
         vm.prank(relayer);
         vm.expectRevert();
-        bridge.executeMint(
-            sourceChainId,
-            unregisteredSourcebridgeAddress,
-            nonce,
-            srcToken,
-            aayush,
-            alice,
-            100_000_000
-        );
+        bridge.executeMint(sourceChainId, unregisteredSourcebridgeAddress, nonce, srcToken, aayush, alice, 100_000_000);
     }
 
     function testUserBalanceTransferredCrossChainSuccessfully() public {
@@ -127,11 +91,10 @@ contract TestUSDC is Test {
             100_000_000
         );
 
-
-        assertEq(token.balanceOf(alice),100_000_000,"Balance didnt matched");
+        assertEq(token.balanceOf(alice), 100_000_000, "Balance didnt matched");
     }
 
-        function testExecuteMintFailOnCalledByNonRelayer() public {
+    function testExecuteMintFailOnCalledByNonRelayer() public {
         vm.startPrank(deployer);
         token.grantMintRole(address(bridge));
         bridge.grantRelayerRole(relayer);
@@ -140,14 +103,6 @@ contract TestUSDC is Test {
 
         vm.prank(aayush); //aayush is not a relayer
         vm.expectRevert();
-        bridge.executeMint(
-            sourceChainId,
-            sourcebridgeAddress,
-            nonce,
-            srcToken,
-            aayush,
-            alice,
-            100_000_000
-        );
+        bridge.executeMint(sourceChainId, sourcebridgeAddress, nonce, srcToken, aayush, alice, 100_000_000);
     }
 }
