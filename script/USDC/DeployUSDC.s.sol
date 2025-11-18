@@ -10,7 +10,10 @@ contract DeployUSDC is Script {
         uint256 deployerKey;
         if (block.chainid == 11155111) {
             deployerKey = vm.envUint("SEPOLIA_PRIVATE_KEY");
-        } else {
+        } else if(block.chainid==421614){
+            deployerKey = vm.envUint("ARB_SEPOLIA_PRIVATE_KEY");
+
+        }else {
             deployerKey = vm.envUint("ANVIL_PRIVATE_KEY");
         }
 
