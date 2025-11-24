@@ -10,14 +10,13 @@ contract DeployUSDC is Script {
         uint256 deployerKey;
         if (block.chainid == 11155111) {
             deployerKey = vm.envUint("SEPOLIA_PRIVATE_KEY");
-        } else if(block.chainid==421614){
+        } else if (block.chainid == 421614) {
             deployerKey = vm.envUint("ARB_SEPOLIA_PRIVATE_KEY");
-
-        }else {
+        } else {
             deployerKey = vm.envUint("ANVIL_PRIVATE_KEY");
         }
 
-        address relayer = vm.addr(deployerKey);
+        address minter = vm.addr(deployerKey);
 
         address deployer = vm.addr(deployerKey);
 
@@ -27,7 +26,7 @@ contract DeployUSDC is Script {
         USDCToken token = new USDCToken();
 
         // If a relayer address was provided (non-zero), grant it mint role via wrapper
-        if (relayer != address(0)) {
+        if (minter != address(0)) {
             // uses the grantMintRole wrapper on your token contract
             token.grantMintRole(relayer);
         } else {
@@ -36,6 +35,6 @@ contract DeployUSDC is Script {
 
         vm.stopBroadcast();
 
-        return (deployer, relayer, token);
+        return (deployer, minter, token);
     }
 }
